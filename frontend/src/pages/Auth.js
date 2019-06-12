@@ -1,33 +1,32 @@
-import React, { Component } from 'react';
-import './Auth.css'
-import AuthContext from '../context/auth-context';
+import React, { Component } from "react";
+import "./Auth.css";
+import AuthContext from "../context/auth-context";
 
 class AuthPage extends Component {
   state = {
     isLogin: true
-  }
+  };
 
   static contextType = AuthContext;
 
   constructor(props) {
     super(props);
-    this.emailEl= React.createRef();
-    this.passwordEl= React.createRef();
+    this.emailEl = React.createRef();
+    this.passwordEl = React.createRef();
   }
 
   switchModeHandler = () => {
     this.setState(prevState => {
       return { isLogin: !prevState.isLogin };
     });
-  }
+  };
 
-  submitHandler = (e) => {
+  submitHandler = e => {
     e.preventDefault();
     const email = this.emailEl.current.value;
     const password = this.passwordEl.current.value;
 
-    if (!email.trim().length || !password.trim().length)
-      return;
+    if (!email.trim().length || !password.trim().length) return;
 
     let requestBody = {
       query: `
@@ -53,23 +52,27 @@ class AuthPage extends Component {
         `
       };
     }
- 
-    fetch('http://localhost:4000/graphql', {
-      method: 'POST',
+
+    fetch("http://localhost:4000/graphql", {
+      method: "POST",
       body: JSON.stringify(requestBody),
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json"
       }
     })
     .then(res => {
       if (res.status !== 200 && res.status !== 201) {
-        throw new Error('Failed');
+        throw new Error("Failed");
       }
       return res.json();
     })
     .then(res => {
       if (res.data.login.token) {
-        this.context.login(res.data.login.token, res.data.login.userId, res.data.login.tokenExpiration);
+        this.context.login(
+          res.data.login.token,
+          res.data.login.userId,
+          res.data.login.tokenExpiration
+        );
       }
     })
     .catch(err => {
@@ -90,7 +93,9 @@ class AuthPage extends Component {
         </div>
         <div className="form-actions">
           <button type="submit">Submit</button>
-          <button type="button" onClick={this.switchModeHandler}>Switch to {this.state.isLogin ? 'Signup' : 'Login'}</button>
+          <button type="button" onClick={this.switchModeHandler}>
+            Switch to {this.state.isLogin ? "Signup" : "Login"}
+          </button>
         </div>
       </form>
     );
