@@ -192,7 +192,6 @@ class EventsPage extends Component {
         return res.json();
       })
       .then(res => {
-        console.log(res)
         this.setState({ selectedEvent: null });
       })
       .catch(err => {
